@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>InstaHk</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+  <%= favicon_link_tag 'favicon.ico' %>
+  <%= yield(:head)%>
+</head>
+
+<body>
+
+<div class="flash">
+  <% flash.each do |key, value| %>
+    <div class="alert alert-<%= key %>"><%= value %></div>
+  <% end %>
+</div>
+
+
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container" title="InstaHK">
+
+      <%= link_to "",root_path,class:"fa fa-instagram fa-3x"%>
+
+      <div class="search_bar">
+        <%= form_tag(pages_path, method: 'get') do %>
+        <div class="search_text black-text">
+            <%= text_field_tag(:search, params[:search],placeholder: "Search Users") %>
+        </div>
+        <% end %>
+      </div>
+
+      <ul class="right">
+          <% if current_user%>
+              <a title="<%=current_user.username%>" style="height:64px;"class='dropdown-button ' data-beloworigin="true" data-constrainWidth="false" href='#' data-activates='userprofile'>
+                  <!-- <div class="col "> -->
+                    <div class="row" style="height:20px;"> Hello!</div>
+                    <div class="row" style="height:32px;"> <strong> <%= current_user.username.capitalize %></strong></div>
+                  <!-- </div> -->
+               </a >
+            <ul id='userprofile' class='dropdown-content'>
+              <li >
+                <%= link_to  profile_path(current_user) do %>
+                <div class="light-blue-text text-lighten-1">My Profile</div>
+                  <%end%>
+              </li>
+              <li title="Edit Profile"><%= link_to 'Edit Profile',edit_user_registration_path,class:" light-blue-text text-lighten-1" %></li>
+              <li title="New Post"><%= link_to " New Post", new_post_path,class: "fa fa-plus-square light-blue-text text-lighten-1"%></li>
+              <li title="Logout"><%= link_to " Sign Out",  destroy_user_session_path,class: "fa fa-sign-out light-blue-text text-lighten-1",method: :delete, data:{confirm: "Are you sure, do you want to logout?"} %></li>
+
+            </ul>
+          <%else%>
+            <a class='dropdown-button' data-beloworigin="true" data-constrainWidth="false" href='#' data-activates='login' style="font-size:18px;">Login</a>
+              <ul id='login' class='dropdown-content'>
+                  <li title="Sign In">
+                    <%= link_to " Sign in",  new_user_session_path,class:"fa fa-sign-in light-blue-text text-lighten-1"%>
+                  </li>
+                  <li title="Sign Up">
+                    <%= link_to " Sign Up",  new_user_registration_path, class:"fa fa-user-plus light-blue-text text-lighten-1"%>
+                  </li>
+              </ul>
+          <%end%>
+      </ul>
+    </div>
+  </nav>
+
+
+<div class="row">
+  <div class="col m2 l3 blank">
+  </div>
+  <div class="col s12 m8 l6 yield" style="padding-left: 10px;padding-right: 10px;">
+    <%= yield %>
+  </div>
+  <div class="col m2 l3 blank">
+  </div>
+</div>
+
+<script src="https://use.fontawesome.com/b95016bb41.js"></script>
+</body>
+</html>

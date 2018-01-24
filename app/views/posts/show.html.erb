@@ -1,0 +1,88 @@
+<br>
+<div class="row single_post">
+
+  <div class="card">
+    <div class="card-action header row " style="padding:12px 10px 6px 10px; ">
+
+        <div class="col s1 l1 m1 left ">
+          <%= link_to profile_path(@post.user) do%>
+            <div class="blue-text row valign-wrapper">
+              <div class="col s8 m8 l8"> <%= image_tag @post.user.avatar.url(:thumb),class:"circle responsive-img"%></div>
+              <div class="col s1 m1 l1 valign-wrapper" style:" padding-right:20px;"> <%= @post.user.username.capitalize %></div>
+            </div>
+          <%end%>
+        </div>
+
+      <%if (user_signed_in? && (current_user.id == @post.user_id))%>
+           <div class="col right">
+
+             <a class="dropdown-button red-text" data-constrainWidth="false" data-beloworigin="true" data-activates='post_options'><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></a>
+
+               <ul id='post_options' class='dropdown-content'>
+                 <li ><%= link_to edit_post_path(@post) do %>
+                    <i class="material-icons green-text"title="edit post" style="margin-right:2px">edit</i> edit
+                   <%end%>
+                 </li>
+                 <li style="color:blue;"><%= link_to post_path(@post), method: :delete, data: {confirm:"Are you sure, do you want to 'DELETE' this post?"} do %>
+                    <i class="material-icons red-text"title="delete post" style="margin-right:2px">delete</i> delete
+                   <%end%>
+                 </li>
+               </ul>
+
+          </div>
+      <%end%>
+
+      <div class="col right">
+        <%= @post.created_at.strftime("%B,%d,%Y") %>
+      </div>
+
+    </div>
+
+    <div align=center>
+      <br>
+       <%= image_tag @post.image.url(:medium), class:"responsive-img" %>
+    </div>
+    <br>
+    <div class="card-action center">
+     <%=@post.description%>
+    </div>
+
+<hr style="border: 0; border-top: 1px solid rgba(160, 160, 160, 0.2);">
+    <div class="">
+
+      <div class="vote_count">
+        <div class="center"><h5><a class="dropdown-button" style="color:red;" href='' data-activates='dropdown1'><%= pluralize(@post.get_likes.size,"Like") %> </a></h5></div>
+        <ul id='dropdown1' class='dropdown-content'>
+        <% @post.get_likes.each do |like| %>
+          <li><%= link_to like.voter.username, profile_path(like.voter)%></li>
+        <% end %>
+       </ul>
+      </div>
+<br>
+      <div class="votes center">
+        <% if current_user.liked? @post %>
+          <%= link_to unlike_post_path(@post), style: "color:red;",  method: :get, remote: true, class: 'unlike_post' do%>
+          <div class="fa fa-heart fa-2x" style="color:#ff0000" aria-hidden="true"> </div>
+          <% end %>
+        <% else %>
+          <%= link_to like_post_path(@post), style: "color:red;",  method: :get, remote: true, class: 'like_post' do%>
+          <div class="fa fa-heart-o fa-2x" aria-hidden="true"> </div>
+          <%end%>
+        <% end %>
+      </div>
+
+    </div>
+<br>
+
+    <div class="comments card-action s12">
+       <div class="center"><h5 class="blue-text"><%= pluralize(@post.comments.count,"Comment") %> </h5></div>
+      <br>
+       <%= render @post.comments%>
+       <%=render "comments/form"%>
+    </div>
+
+</div>
+
+<br>
+<br>
+</div>
